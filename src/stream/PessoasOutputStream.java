@@ -1,8 +1,8 @@
 package stream;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintStream;
+import java.io.*;
+import java.net.*;
+
 import pessoa.Pessoa;
 
 public class PessoasOutputStream extends OutputStream {
@@ -30,7 +30,7 @@ public class PessoasOutputStream extends OutputStream {
 			if (pessoa != null) {
 				int tamanhoNomePessoa = pessoa.getNome().getBytes().length;
 				String nome = pessoa.getNome();
-				double cpf = pessoa.getCpf();
+				String cpf = pessoa.getCpf();
 				int idade = pessoa.getIdade();
 							
 				opLocal.println(" tamanhoNomePessoa: "+tamanhoNomePessoa+ "\n"+
@@ -42,11 +42,74 @@ public class PessoasOutputStream extends OutputStream {
 	}
 
 	public void writeFile() {
-		// envia os dados de um conjunto (array) de Pessoas
+		// envia os dados de um conjunto (array) de Pessoas para um arquivo
+		DataOutputStream dop = null;
+		try {
+			dop = new DataOutputStream(new FileOutputStream("salvo"));
+			dop.writeInt(pessoas.length);
+			for(Pessoa p : pessoas) {
+				//pega o número de bytes do nome e cpf
+				byte[] nomeBytes = p.getNome().getBytes("UTF-8");
+	            byte[] cpfBytes = p.getCpf().getBytes("UTF-8");
+	            dop.writeInt(nomeBytes.length); //escreve o numero de bytes do nome
+	            dop.writeInt(cpfBytes.length); //escreve o numero de bytes do cpf
+	            //escreve nome, cpf e idade da pessoa
+	            dop.write(nomeBytes);
+	            dop.write(cpfBytes);
+	            dop.writeInt(p.getIdade());
+			}
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally {
+			try {
+				dop.close();
+				op.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		
 	}
 	
 	public void writeTCP() {
 		// envia os dados de um conjunto (array) de Pessoas
+		DataOutputStream dop = null;
+		try {
+			dop = new DataOutputStream(op);
+			dop.writeInt(pessoas.length);
+			for(Pessoa p : pessoas) {
+				//pega o número de bytes do nome e cpf
+				byte[] nomeBytes = p.getNome().getBytes("UTF-8");
+                byte[] cpfBytes = p.getCpf().getBytes("UTF-8");
+                dop.writeInt(nomeBytes.length); //envia o numero de bytes do nome
+                dop.writeInt(cpfBytes.length); //envia o numero de bytes do cpf
+                //envia nome, cpf e idade da pessoa
+                dop.write(nomeBytes);
+                dop.write(cpfBytes);
+                dop.writeInt(p.getIdade());
+			}
+		} catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}finally{
+			if(op!=null) {
+				try {
+					dop.close();
+					op.close();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
 	}		
 	
 	@Override

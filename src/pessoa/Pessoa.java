@@ -2,10 +2,10 @@ package pessoa;
 
 public class Pessoa {
 	private String nome;
-	private double cpf;
+	private String cpf;
 	private int idade;
 	
-	public Pessoa(String nome, double cpf, int idade) {
+	public Pessoa(String nome, String cpf, int idade) {
 		this.nome = nome;
 		this.cpf = cpf;
 		this.idade = idade;
@@ -17,10 +17,10 @@ public class Pessoa {
 	public void setNome(String nome) {
 		this.nome = nome;
 	}
-	public double getCpf() {
+	public String getCpf() {
 		return cpf;
 	}
-	public void setCpf(double cpf) {
+	public void setCpf(String cpf) {
 		this.cpf = cpf;
 	}
 	public int getIdade() {

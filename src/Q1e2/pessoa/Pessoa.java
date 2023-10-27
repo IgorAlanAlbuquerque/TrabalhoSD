@@ -1,4 +1,4 @@
-package pessoa;
+package Q1e2.pessoa;
 
 public class Pessoa {
 	private String nome;

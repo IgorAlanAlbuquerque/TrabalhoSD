@@ -1,9 +1,9 @@
-package stream;
+package Q1e2.stream;
 
 import java.io.*;
 import java.net.*;
 
-import pessoa.Pessoa;
+import Q1e2.pessoa.Pessoa;
 
 public class PessoasOutputStream extends OutputStream {
 

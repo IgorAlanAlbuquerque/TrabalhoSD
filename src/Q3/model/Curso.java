@@ -21,6 +21,9 @@ public class Curso {
 	public void setAlunos(ArrayList<Aluno> alunos) {
 		this.alunos = alunos;
 	}
+	public void addAluno(Aluno aluno) {
+		alunos.add(aluno);
+	}
 
 	public String getNomeDoCruso() {
 		return nomeDoCruso;

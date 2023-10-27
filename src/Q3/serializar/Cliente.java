@@ -11,13 +11,20 @@ import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
 public class Cliente {
 	
 	public static void main(String[] args) {
-		
+		Aluno igor = new Aluno("igor","07033387443",553540,7.4,25,"Ciencia da Computação","igor123");
+		Aluno hipo = new Aluno("aluno2", "843985435",445533,0.8,19,"Ciencia da Computação","aluno2");
+		Aluno novo = new Aluno("aluno3", "44433322212", 554673,5.6,22,"Sitemas de Informação","aluno3");
+		Aluno terce = new Aluno("aluno4", "435853456", 445567, 6.7,21,"Sistemas de Informação","aluno4");
+		System.out.println(envia(igor));
+		System.out.println(envia(hipo));
+		System.out.println(envia(novo));
+		System.out.println(envia(terce));
 	}
 
 	public Cliente() {
 		// TODO Auto-generated constructor stub
 	}
-	public Aluno envia(Aluno aluno) {
+	public static Aluno envia(Aluno aluno) {
 	    // Serializa o objeto Aluno em JSON
 	    String JSON = object2JSON(aluno);
 
@@ -36,6 +43,7 @@ public class Cliente {
 	        dout = new DataOutputStream(out);
 	        din = new DataInputStream(in);
 	        // Converte o JSON em bytes e envia para o servidor
+	        System.out.println("Digite (1) CC ou (2) SI");
 	        byte[] JsonBytes = JSON.getBytes("UTF-8");
 	        dout.writeInt(JsonBytes.length);
 	        out.write(JsonBytes);
@@ -73,7 +81,7 @@ public class Cliente {
 	    // Em caso de erro retorna null
 	    return null;
 	}
-	private String object2JSON(Aluno aluno) {
+	private static String object2JSON(Aluno aluno) {
 		// Cria uma instancia do XStream configurado para gerar JSON usando o driver Jettison
 		XStream xstream = new XStream(new JettisonMappedXmlDriver());
 		// Define que nao devem ser incluidas referencias aos objetos serializados
@@ -85,7 +93,7 @@ public class Cliente {
 		//retorna o json criado
 		return JSON;
 	}
-	private Aluno JSON2Object(String JSON) {
+	private static Aluno JSON2Object(String JSON) {
 		// Cria uma inst�ncia do XStream configurado para processar JSON usando o driver Jettison
 		XStream xstream = new XStream(new JettisonMappedXmlDriver());
 		// Define um alias "aluno" para a classe 'Aluno'

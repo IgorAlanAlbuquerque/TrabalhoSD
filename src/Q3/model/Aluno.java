@@ -9,20 +9,30 @@ public class Aluno implements Serializable{
 	private int matricula;
 	private double IRA;
 	private int idade;
-	private Curso curso;
+	private String curso;
+	private String senha;
 
 
-	public Aluno(String nome, String CPF, int matricula, double IRA, int idade, Curso curso) {
+	public Aluno(String nome, String CPF, int matricula, double IRA, int idade, String curso, String senha) {
 		this.nome = nome;
 		this.CPF = CPF;
 		this.matricula = matricula;
 		this.IRA = IRA;
 		this.idade = idade;
 		this.curso = curso;
+		this.senha = senha;
 	}
 
 	public String getNome() {
 		return nome;
+	}
+
+	public String getSenha() {
+		return senha;
+	}
+
+	public void setSenha(String senha) {
+		this.senha = senha;
 	}
 
 	public void setNome(String nome) {
@@ -61,11 +71,11 @@ public class Aluno implements Serializable{
 		this.idade = idade;
 	}
 
-	public Curso getCurso() {
+	public String getCurso() {
 		return curso;
 	}
 
-	public void setCurso(Curso curso) {
+	public void setCurso(String curso) {
 		this.curso = curso;
 	}
 

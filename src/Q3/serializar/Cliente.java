@@ -9,6 +9,10 @@ import Q3.model.*;
 import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
 
 public class Cliente {
+	
+	public static void main(String[] args) {
+		
+	}
 
 	public Cliente() {
 		// TODO Auto-generated constructor stub

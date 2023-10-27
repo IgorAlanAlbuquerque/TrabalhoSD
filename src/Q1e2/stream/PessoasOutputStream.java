@@ -6,6 +6,10 @@ import java.net.*;
 import Q1e2.pessoa.Pessoa;
 
 public class PessoasOutputStream extends OutputStream {
+	
+	public static void main(String[] args) {
+		
+	}
 
 	private OutputStream op;
 	private Pessoa[] pessoas;

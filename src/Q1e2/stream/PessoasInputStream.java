@@ -7,6 +7,10 @@ import Q1e2.pessoa.Pessoa;
 import java.util.Scanner;
 
 public class PessoasInputStream extends InputStream {
+	
+	public static void main(String[] args) {
+		
+	}
 
 	private InputStream is;
 	private Pessoa[] pessoas;

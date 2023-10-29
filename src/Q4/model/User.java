@@ -1,7 +1,8 @@
 package Q4.model;
 
+import java.io.Serializable;
 
-public class User{
+public class User implements Serializable{
 	private String nome;
 	private String login;
 	private String senha;

@@ -1,6 +1,10 @@
 package Q4.model;
 
 public class Candidato extends User {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private int numero;
 	public Candidato(String nome, String login, String senha, int numero) {
 		super(nome,login,senha);

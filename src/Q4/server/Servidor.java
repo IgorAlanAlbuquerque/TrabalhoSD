@@ -34,7 +34,7 @@ public class Servidor{
 					while (true) {
 						Socket clientSocket = listenSocket.accept();
 						System.out.println("conexão estabelecida");
-						Connection c = new Connection(clientSocket, usuarios, urna);
+						new Connection(clientSocket, usuarios, urna);
 					}
 				}
 			} catch (IOException e) {

@@ -9,9 +9,6 @@ import java.util.ArrayList;
 
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
-import com.thoughtworks.xstream.security.AnyTypePermission;
-
-import Q3.model.Aluno;
 import Q4.model.*;
 import Q4.urna.Urna;
 
@@ -111,7 +108,7 @@ public class Connection extends Thread {
 				}else {
 					out.writeUTF("digite a mensagem a ser enviada");
 					String mensagem = in.readUTF();
-					Multcast mult = new Multcast(mensagem);
+					new Multcast(mensagem);
 				}
 			}
 			return;
@@ -126,7 +123,7 @@ public class Connection extends Thread {
 		// Define que nao devem ser incluidas referencias aos objetos serializados
         xstream.setMode(XStream.NO_REFERENCES);
         // Define um alias "aluno" para a classe 'Aluno' para uso na serializacao
-        xstream.alias("candidato", Candidato.class);
+        xstream.alias("candidato", User.class);
         // Converte o objeto 'Aluno' em JSON (XML formatado como JSON)
 		String JSON = xstream.toXML(arrayList);
 		//retorna o json criado

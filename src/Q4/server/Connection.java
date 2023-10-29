@@ -38,14 +38,15 @@ public class Connection extends Thread {
 
 			String login = in.readUTF(); // read a line of data from the stream
 			String senha = in.readUTF();
+			boolean flag= false;
 			for(User u : usuarios) {
 				if(u.getLogin().equals(login) && u.getSenha().equals(senha)) {
 					if(u instanceof Admin) comoAdmin(u);
 					else comoEleitor(u);
-				}else {
-					out.writeUTF("Login ou senha invalidos");
+					flag = true;
 				}
 			}
+			if(!flag) out.writeUTF("Login ou senha invalidos");
 		} catch (EOFException e) {
 			System.out.println("EOF:" + e.getMessage());
 		} catch (IOException e) {
@@ -66,7 +67,8 @@ public class Connection extends Thread {
 				byte[] JsonBytes = JSON.getBytes("UTF-8");
 		        out.writeInt(JsonBytes.length);
 		        out.write(JsonBytes);
-				if(!u.isVotou() && urna.addVoto(in.read())) {
+		        int numCandidato = in.read();
+				if(!u.isVotou() && urna.addVoto(numCandidato)) {
 					u.setVotou(true);
 					out.writeUTF("voto contabilizado");
 					return;
@@ -82,7 +84,7 @@ public class Connection extends Thread {
 		try {
 			out.writeUTF("pode (1) votar, (2) adicionar candidato, (3) iniciar a votação, (4) enviar mensagem ou outro numero para sair");
 			int e = in.readInt();
-			while(e==1 && e ==2 && e==3 && e ==4) {
+			while(e==1 || e ==2 || e==3 || e ==4) {
 				if(e==1) {
 					comoEleitor(u);
 				}else if(e==2) {
@@ -123,7 +125,7 @@ public class Connection extends Thread {
 		// Define que nao devem ser incluidas referencias aos objetos serializados
         xstream.setMode(XStream.NO_REFERENCES);
         // Define um alias "aluno" para a classe 'Aluno' para uso na serializacao
-        xstream.alias("candidato", User.class);
+        xstream.alias("Usuario", User.class);
         // Converte o objeto 'Aluno' em JSON (XML formatado como JSON)
 		String JSON = xstream.toXML(arrayList);
 		//retorna o json criado

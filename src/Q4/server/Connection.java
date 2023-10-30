@@ -80,9 +80,9 @@ public class Connection extends Thread {
 		        int numCandidato = in.read();
 				if(!u.isVotou() && urna.addVoto(numCandidato)) {
 					u.setVotou(true);
-					out.writeUTF("voto contabilizado");
+					out.writeUTF("V");
 					return;
-				}else out.writeUTF("Numero errado");
+				}else out.writeUTF("N");
 			}else {
 				out.writeUTF("N");
 			}

@@ -7,21 +7,24 @@ import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.json.JettisonMappedXmlDriver;
 import com.thoughtworks.xstream.security.AnyTypePermission;
 
-import Q3.model.Aluno;
 import Q4.model.*;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.net.DatagramPacket;
+import java.net.MulticastSocket;
 
 public class Cliente {
 	private static Socket socket;
 	private static DataInputStream in;
 	private static DataOutputStream out;
 	private static Scanner scan;
+	private static MulticastSocket mcs;
 	private int serverPort;
 	
 	public Cliente() {
@@ -83,10 +86,39 @@ public class Cliente {
 			        Candidato receivedCand = (Candidato) JSON2Object(receivedJSON);
 			        candidatos.add(receivedCand);
 				}
+				for(Candidato c : candidatos) {
+					System.out.println("Nome: "+c.getNome()+" Numero: "+c.getNumero());
+				}
+				System.out.println("Digite o numero do candidato");
+				int numero = scan.nextInt();
+				out.writeInt(numero);
+				String v = in.readUTF();
+				if(v.equals("V")) System.out.println("Voto contabilizado");
+				else System.out.println("Erro: Voto nao contabilizado por algum motivo");
+				int op;
+				System.out.println("Digite 0 para sair ou continue logado para receber mensagens de administradores");
+				op = scan.nextInt();
+				while(op!=0){
+					mcs = new MulticastSocket(12347);
+					InetAddress grp = InetAddress.getByName("239.0.0.1");
+					mcs.joinGroup(grp);
+					
+					byte rec[] = new byte[256];
+					DatagramPacket pkg = new DatagramPacket(rec, rec.length);
+					mcs.receive(pkg);
+					
+					String data = new String(pkg.getData());
+					System.out.println("Mensagem: " + data);
+					System.out.println("Digite 0 para sair ou continue logado para receber mensagens de administradores");
+					op = scan.nextInt();
+				}
 			}else System.out.println("Não pode votar agora");
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}finally{
+			if(mcs!=null)
+				mcs.close();
 		}
 		
 	}

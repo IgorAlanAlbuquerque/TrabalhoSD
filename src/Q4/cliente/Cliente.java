@@ -120,11 +120,70 @@ public class Cliente {
 			if(mcs!=null)
 				mcs.close();
 		}
-		
 	}
 
 	private static void Adm() {
 		// TODO Auto-generated method stub
+		try {
+			while(true) {
+				System.out.println(in.readUTF());
+				int escolha = scan.nextInt();
+				out.writeInt(escolha);
+				if(escolha==1) NAdm();
+				else if(escolha==2) {
+					ArrayList<Eleitor> praReceber = new ArrayList<Eleitor>();
+					int qtd = in.readInt();
+					for(int i=0;i<qtd;i++) {
+						int tam = in.readInt();
+						byte[] JsonBytesR = new byte[tam];
+				        in.read(JsonBytesR);
+				        String receivedJSON = new String(JsonBytesR, "UTF-8");
+				        Eleitor receivedCand = (Eleitor) JSON2Object(receivedJSON);
+				        praReceber.add(receivedCand);
+					}
+					for(Eleitor elei : praReceber) {
+						System.out.println("Nome: "+elei.getNome());
+					}
+					System.out.println("Digite o nome do eleitor a ser colocado como candidato");
+					String nomeElei = scan.nextLine();
+					out.writeUTF(nomeElei);
+					String res = in.readUTF();
+					if(res.equals("E")) {
+						System.out.println("Digite o numero a ser associado ao candidato");
+						int numeroCan = scan.nextInt();
+						out.writeInt(numeroCan);
+					}else System.out.println("Candidato nao encontrado");
+				}else if(escolha==3) continue;
+				else if(escolha==4) {
+					System.out.println(in.readUTF());
+					String mensagem = scan.nextLine();
+					out.writeUTF(mensagem);
+				}else if(escolha==5) {
+					ArrayList<Candidato> praReceber = new ArrayList<Candidato>();
+					int qtd = in.readInt();
+					for(int i=0;i<qtd;i++) {
+						int tam = in.readInt();
+						byte[] JsonBytesR = new byte[tam];
+				        in.read(JsonBytesR);
+				        String receivedJSON = new String(JsonBytesR, "UTF-8");
+				        Candidato receivedCand = (Candidato) JSON2Object(receivedJSON);
+				        praReceber.add(receivedCand);
+					}
+					for(Candidato can : praReceber) {
+						System.out.println("Nome: "+can.getNome());
+					}
+					System.out.println("Digite o nome do Candidato a ser removido");
+					String nomeCan = scan.nextLine();
+					out.writeUTF(nomeCan);
+					String res = in.readUTF();
+					if(res.equals("E")) System.out.println("Candidato removido");
+					else System.out.println("Candidato nao encontrado");
+				}else return;
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 	}
 	private static User JSON2Object(String JSON) {

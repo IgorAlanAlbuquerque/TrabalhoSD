@@ -92,9 +92,9 @@ public class Connection extends Thread {
 	}
 	private void comoAdmin(User u) {
 		try {
-			out.writeUTF("digite: (1) votar, (2) adicionar candidato, (3) iniciar a votação, (4) enviar mensagem (5) remover Candidato ou qualquer outra tecla para sair");
-			int e = in.readInt();
-			while(e==1 || e ==2 || e==3 || e ==4 || e==5) {
+			while(true) {
+				out.writeUTF("digite: (1) votar, (2) adicionar candidato, (3) iniciar a votação, (4) enviar mensagem (5) remover Candidato ou qualquer outra tecla para sair");
+				int e = in.readInt();
 				if(e==1) {
 					comoEleitor(u);
 				}else if(e==2) {
@@ -102,6 +102,7 @@ public class Connection extends Thread {
 					for(User user : usuarios)
 						if(user instanceof Eleitor)
 							praEnviar.add((Eleitor) user);
+					out.writeInt(praEnviar.size());
 					for(Eleitor elei : praEnviar) {
 						String JSON = object2JSON(elei);
 						byte[] JsonBytes = JSON.getBytes("UTF-8");
@@ -109,25 +110,49 @@ public class Connection extends Thread {
 				        out.write(JsonBytes);
 					}
 					String escolha = in.readUTF();
+					boolean flag = false;
 					for(User user : usuarios) {
 						if(user.getNome().equals(escolha)) {
-							out.writeUTF("digite o numero do candidato");
+							out.writeUTF("E");
 							int numeroDoCandidato = in.readInt();
 							usuarios.remove(u);
 							usuarios.add(new Candidato(u.getNome(),u.getLogin(),u.getSenha(),numeroDoCandidato));
+							flag = true;
 						}
-					}					
+					}
+					if(!flag) out.writeUTF("N");
 				}else if(e==3) {
 					urna.iniVotacao();		
 				}else if(e==4) {
 					out.writeUTF("digite a mensagem a ser enviada");
 					String mensagem = in.readUTF();
 					new Multcast(mensagem);
-				}else {
+				}else if(e==5){
 					//remover candidato
-				}
+					ArrayList<Candidato> praEnviar = new ArrayList<Candidato>();
+					for(User user : usuarios)
+						if(user instanceof Candidato)
+							praEnviar.add((Candidato) user);
+					out.writeInt(praEnviar.size());
+					for(Candidato can : praEnviar) {
+						String JSON = object2JSON(can);
+						byte[] JsonBytes = JSON.getBytes("UTF-8");
+				        out.writeInt(JsonBytes.length);
+				        out.write(JsonBytes);
+					}
+					String escolha = in.readUTF();
+					boolean flag = false;
+					for(User user : usuarios) {
+						if(user.getNome().equals(escolha)) {
+							out.writeUTF("E");
+							usuarios.remove(u);
+							usuarios.add(new Eleitor(u.getNome(),u.getLogin(),u.getSenha()));
+							flag = true;
+						}
+					}
+					if(!flag) out.writeUTF("N");
+				}else return;
 			}
-			return;
 		} catch(IOException e) {
 			System.out.println(e.getMessage());
 		}

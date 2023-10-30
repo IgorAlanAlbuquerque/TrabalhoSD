@@ -41,9 +41,15 @@ public class Connection extends Thread {
 			boolean flag= false;
 			for(User u : usuarios) {
 				if(u.getLogin().equals(login) && u.getSenha().equals(senha)) {
-					if(u instanceof Admin) comoAdmin(u);
-					else comoEleitor(u);
 					flag = true;
+					if(u instanceof Admin) {
+						out.writeUTF("Adm");
+						comoAdmin(u);
+					}
+					else{
+						out.writeUTF("Nao");
+						comoEleitor(u);
+					}
 				}
 			}
 			if(!flag) out.writeUTF("Login ou senha invalidos");
@@ -63,10 +69,14 @@ public class Connection extends Thread {
 	private void comoEleitor(User u) {
 		try {
 			if(urna.isPodeVotar()) {
-				String JSON = object2JSON(urna.listaCandidato());
-				byte[] JsonBytes = JSON.getBytes("UTF-8");
-		        out.writeInt(JsonBytes.length);
-		        out.write(JsonBytes);
+				out.writeUTF("P");
+				out.writeInt(urna.listaCandidato().size());
+				for(Candidato c : urna.listaCandidato()) {
+					String JSON = object2JSON(c);
+					byte[] JsonBytes = JSON.getBytes("UTF-8");
+			        out.writeInt(JsonBytes.length);
+			        out.write(JsonBytes);
+				}
 		        int numCandidato = in.read();
 				if(!u.isVotou() && urna.addVoto(numCandidato)) {
 					u.setVotou(true);
@@ -74,7 +84,7 @@ public class Connection extends Thread {
 					return;
 				}else out.writeUTF("Numero errado");
 			}else {
-				out.writeUTF("Nao pode votar agora");
+				out.writeUTF("N");
 			}
 		} catch(IOException e) {
 			System.out.println(e.getMessage());
@@ -82,20 +92,22 @@ public class Connection extends Thread {
 	}
 	private void comoAdmin(User u) {
 		try {
-			out.writeUTF("pode (1) votar, (2) adicionar candidato, (3) iniciar a votação, (4) enviar mensagem ou outro numero para sair");
+			out.writeUTF("digite: (1) votar, (2) adicionar candidato, (3) iniciar a votação, (4) enviar mensagem (5) remover Candidato ou qualquer outra tecla para sair");
 			int e = in.readInt();
-			while(e==1 || e ==2 || e==3 || e ==4) {
+			while(e==1 || e ==2 || e==3 || e ==4 || e==5) {
 				if(e==1) {
 					comoEleitor(u);
 				}else if(e==2) {
-					ArrayList<User> praEnviar = new ArrayList<User>();
+					ArrayList<Eleitor> praEnviar = new ArrayList<Eleitor>();
 					for(User user : usuarios)
 						if(user instanceof Eleitor)
-							praEnviar.add(user);
-					String JSON = object2JSON(praEnviar);
-					byte[] JsonBytes = JSON.getBytes("UTF-8");
-			        out.writeInt(JsonBytes.length);
-			        out.write(JsonBytes);
+							praEnviar.add((Eleitor) user);
+					for(Eleitor elei : praEnviar) {
+						String JSON = object2JSON(elei);
+						byte[] JsonBytes = JSON.getBytes("UTF-8");
+				        out.writeInt(JsonBytes.length);
+				        out.write(JsonBytes);
+					}
 					String escolha = in.readUTF();
 					for(User user : usuarios) {
 						if(user.getNome().equals(escolha)) {
@@ -107,10 +119,12 @@ public class Connection extends Thread {
 					}					
 				}else if(e==3) {
 					urna.iniVotacao();		
-				}else {
+				}else if(e==4) {
 					out.writeUTF("digite a mensagem a ser enviada");
 					String mensagem = in.readUTF();
 					new Multcast(mensagem);
+				}else {
+					//remover candidato
 				}
 			}
 			return;
@@ -119,7 +133,7 @@ public class Connection extends Thread {
 		}
 		
 	}
-	private static String object2JSON(ArrayList<User> arrayList) {
+	private static String object2JSON(User user) {
 		// Cria uma instancia do XStream configurado para gerar JSON usando o driver Jettison
 		XStream xstream = new XStream(new JettisonMappedXmlDriver());
 		// Define que nao devem ser incluidas referencias aos objetos serializados
@@ -127,7 +141,7 @@ public class Connection extends Thread {
         // Define um alias "aluno" para a classe 'Aluno' para uso na serializacao
         xstream.alias("Usuario", User.class);
         // Converte o objeto 'Aluno' em JSON (XML formatado como JSON)
-		String JSON = xstream.toXML(arrayList);
+		String JSON = xstream.toXML(user);
 		//retorna o json criado
 		return JSON;
 	}

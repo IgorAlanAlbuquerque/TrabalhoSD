@@ -83,8 +83,8 @@ public class Urna {
 	public Map<Candidato, Integer> getCandidatos() {
 		return candidatos;
 	}
-	public ArrayList<User> listaCandidato(){
-		ArrayList<User> candi = new ArrayList<User>();
+	public ArrayList<Candidato> listaCandidato(){
+		ArrayList<Candidato> candi = new ArrayList<Candidato>();
 		for(Candidato c : candidatos.keySet()) {
 			candi.add(c);
 		}

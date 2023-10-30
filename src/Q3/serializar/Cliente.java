@@ -43,7 +43,6 @@ public class Cliente {
 	        dout = new DataOutputStream(out);
 	        din = new DataInputStream(in);
 	        // Converte o JSON em bytes e envia para o servidor
-	        System.out.println("Digite (1) CC ou (2) SI");
 	        byte[] JsonBytes = JSON.getBytes("UTF-8");
 	        dout.writeInt(JsonBytes.length);
 	        out.write(JsonBytes);
@@ -54,7 +53,6 @@ public class Cliente {
 	        // Converte a resposta do JSON de volta para um objeto Aluno
 	        String receivedJSON = new String(JsonBytesR, "UTF-8");
 	        Aluno receivedAluno = JSON2Object(receivedJSON);
-
 	        return receivedAluno;
 	    } catch (UnknownHostException e) {
 	        System.out.println("Socket:" + e.getMessage());

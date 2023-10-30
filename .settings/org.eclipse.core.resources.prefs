@@ -1,5 +1,6 @@
 eclipse.preferences.version=1
 encoding//src/Q3/serializar/Cliente.java=UTF-8
+encoding//src/Q3/serializar/Servidor.java=UTF-8
 encoding//src/Q4/cliente/Cliente.java=UTF-8
 encoding//src/Q4/server/Connection.java=UTF-8
 encoding//src/Q4/server/Multcast.java=UTF-8

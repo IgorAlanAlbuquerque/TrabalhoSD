@@ -49,7 +49,7 @@ public class PessoasOutputStream extends OutputStream {
 		// envia os dados de um conjunto (array) de Pessoas para um arquivo
 		DataOutputStream dop = null;
 		try {
-			dop = new DataOutputStream(new FileOutputStream("salvo"));
+			dop = new DataOutputStream(new FileOutputStream("salvo.dat"));
 			dop.writeInt(pessoas.length);
 			for(Pessoa p : pessoas) {
 				//pega o número de bytes do nome e cpf

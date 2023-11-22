@@ -40,7 +40,7 @@ public class PessoasInputStream extends InputStream {
 	
 	public Pessoa[] readFile() {
 		try {
-			DataInputStream dis = new DataInputStream(new FileInputStream("salvo"));
+			DataInputStream dis = new DataInputStream(new FileInputStream("salvo.dat"));
 			int numPessoas = dis.readInt();
 			for(int i=0;i<numPessoas;i++) {
 				//ler o nome
